@@ -88,7 +88,7 @@ export default function App() {
             )}
           </div>
           <h1>NutellaBrot</h1>
-          <p className="subtitle">Creator · Developer · Designer</p>
+          <p className="subtitle">Designer · Gamer · Developer</p>
           {status && (
             <p className="presence-info">
               <span className={`presence-badge presence-badge--${status}`}>
@@ -104,8 +104,9 @@ export default function App() {
         </header>
 
         <section className="bio">
-          Ich entwickle Websites, Apps und Designs.
-          Willkommen auf meiner kleinen Ecke des Internets.
+          Hey, ich bin NutellaBrot
+          Ich bin aktiver Grafikdesigner und arbeite aktuell an 
+          verschiedenen Projekten. Schau doch gerne mal vorbei, sind unten Verlinkt ⬇️
         </section>
 
         {SECTIONS.map((section) => (
