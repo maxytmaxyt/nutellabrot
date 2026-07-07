@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-const API_BASE = 'http://de3.bot-hosting.net:20230'
+const API_BASE = 'https://nutella.roleplaybots.eu'
 
 export function useDiscordPresence() {
   const [status, setStatus] = useState(null)
