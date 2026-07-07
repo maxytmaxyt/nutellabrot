@@ -24,15 +24,19 @@
 
 html {
   scroll-behavior: smooth;
+  height: 100%;
 }
 
 body {
   font-family: 'Inter', sans-serif;
   color: var(--text);
-  min-height: 100vh;
+  min-height: 100%;
+  min-height: 100dvh;
   display: grid;
   place-items: center;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 24px 16px;
   background:
     radial-gradient(circle at top, #13254d 0%, transparent 45%),
     radial-gradient(circle at bottom right, #28124f 0%, transparent 40%),
@@ -46,6 +50,7 @@ body::after {
   background-image: url('https://grainy-gradients.vercel.app/noise.svg');
   opacity: 0.03;
   pointer-events: none;
+  z-index: 0;
 }
 
 /* ===========================
@@ -67,7 +72,7 @@ body::after {
 }
 
 /* ===========================
-   Cursor Glow
+   Cursor Glow (desktop only)
 =========================== */
 
 .cursor {
@@ -84,6 +89,11 @@ body::after {
   filter: blur(35px);
   transform: translate(-50%, -50%);
   z-index: -1;
+  will-change: transform;
+}
+
+@media (hover: none) {
+  .cursor { display: none; }
 }
 
 /* ===========================
@@ -92,14 +102,16 @@ body::after {
 
 .glass {
   position: relative;
-  width: min(420px, 92vw);
-  padding: 46px;
-  border-radius: 34px;
+  width: min(440px, 100%);
+  padding: clamp(28px, 6vw, 46px);
+  border-radius: clamp(20px, 5vw, 34px);
   background: var(--glass);
   border: 1px solid var(--glass-border);
   backdrop-filter: blur(30px) saturate(180%);
   box-shadow: var(--shadow);
   overflow: hidden;
+  will-change: transform;
+  margin: auto;
 }
 
 .glass::before {
@@ -115,8 +127,8 @@ body::after {
 =========================== */
 
 .avatar {
-  width: 128px;
-  height: 128px;
+  width: clamp(88px, 22vw, 128px);
+  height: clamp(88px, 22vw, 128px);
   margin: auto;
   display: block;
   object-fit: cover;
@@ -126,10 +138,11 @@ body::after {
     0 0 60px rgba(100, 180, 255, 0.25),
     0 15px 40px rgba(0, 0, 0, 0.45);
   transition: var(--transition);
+  will-change: transform;
 }
 
 .avatar:hover {
-  transform: scale(1.05) rotate(-2deg);
+  transform: scale(1.05) rotate(-2deg) !important;
 }
 
 /* ===========================
@@ -137,23 +150,45 @@ body::after {
 =========================== */
 
 h1 {
-  margin-top: 26px;
-  font-size: 2rem;
+  margin-top: 20px;
+  font-size: clamp(1.5rem, 5vw, 2rem);
   font-weight: 800;
   letter-spacing: -1px;
 }
 
 p {
-  margin-top: 10px;
+  margin-top: 8px;
   color: var(--text-light);
   line-height: 1.6;
 }
 
+.subtitle {
+  font-size: clamp(0.8rem, 3vw, 0.95rem);
+}
+
 .bio {
-  margin-top: 20px;
-  font-size: 0.95rem;
+  margin-top: 18px;
+  font-size: clamp(0.85rem, 2.5vw, 0.95rem);
   color: var(--text-light);
   line-height: 1.6;
+}
+
+/* ===========================
+   Link Sections
+=========================== */
+
+.link-section {
+  margin-top: clamp(20px, 5vw, 28px);
+}
+
+.section-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.32);
+  margin-bottom: 10px;
+  padding-left: 4px;
 }
 
 /* ===========================
@@ -161,10 +196,9 @@ p {
 =========================== */
 
 .links {
-  margin-top: 34px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: clamp(10px, 2.5vw, 14px);
 }
 
 .links a {
@@ -172,15 +206,18 @@ p {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 62px;
-  border-radius: 18px;
+  height: clamp(52px, 13vw, 62px);
+  border-radius: clamp(14px, 3.5vw, 18px);
   overflow: hidden;
   text-decoration: none;
   color: white;
   font-weight: 600;
+  font-size: clamp(0.88rem, 2.5vw, 1rem);
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.08);
   transition: var(--transition);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .links a::before {
@@ -200,7 +237,7 @@ p {
 }
 
 .links a:hover {
-  transform: translateY(-4px) scale(1.02);
+  transform: translateY(-3px) scale(1.02);
   border-color: rgba(255, 255, 255, 0.2);
   background: rgba(255, 255, 255, 0.09);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
@@ -210,7 +247,12 @@ p {
   left: 140%;
 }
 
-.links a:focus {
+.links a:active {
+  transform: scale(0.97);
+  transition: transform 0.1s;
+}
+
+.links a:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.4);
   outline-offset: 2px;
 }
@@ -218,18 +260,20 @@ p {
 .link-icon {
   margin-right: 10px;
   font-size: 1.1rem;
+  flex-shrink: 0;
 }
 
 .link-arrow {
   position: absolute;
   right: 18px;
-  width: 18px;
-  height: 18px;
-  stroke: rgba(255, 255, 255, 0.5);
+  width: 16px;
+  height: 16px;
+  stroke: rgba(255, 255, 255, 0.45);
   stroke-width: 2;
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
+  flex-shrink: 0;
 }
 
 /* ===========================
@@ -237,10 +281,10 @@ p {
 =========================== */
 
 footer {
-  margin-top: 32px;
+  margin-top: clamp(20px, 5vw, 32px);
   text-align: center;
-  color: rgba(255, 255, 255, 0.35);
-  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.78rem;
 }
 
 /* ===========================
@@ -248,27 +292,17 @@ footer {
 =========================== */
 
 @keyframes auroraMove {
-  0% {
-    transform: rotate(0deg) translate(0, 0) scale(1);
-  }
-  25% {
-    transform: rotate(60deg) translate(6%, 4%) scale(1.15);
-  }
-  50% {
-    transform: rotate(130deg) translate(-4%, 6%) scale(1.3);
-  }
-  75% {
-    transform: rotate(220deg) translate(8%, -5%) scale(1.15);
-  }
-  100% {
-    transform: rotate(360deg) translate(0, 0) scale(1);
-  }
+  0%   { transform: rotate(0deg)   translate(0, 0)     scale(1);    }
+  25%  { transform: rotate(60deg)  translate(6%, 4%)   scale(1.15); }
+  50%  { transform: rotate(130deg) translate(-4%, 6%)  scale(1.3);  }
+  75%  { transform: rotate(220deg) translate(8%, -5%)  scale(1.15); }
+  100% { transform: rotate(360deg) translate(0, 0)     scale(1);    }
 }
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(30px) scale(0.95);
+    transform: translateY(24px) scale(0.97);
   }
   to {
     opacity: 1;
@@ -278,7 +312,7 @@ footer {
 
 @keyframes fadeIn {
   from { opacity: 0; }
-  to { opacity: 1; }
+  to   { opacity: 1; }
 }
 
 .animate-fadeIn {
@@ -286,20 +320,21 @@ footer {
 }
 
 /* ===========================
-   Link Sections
+   Reduced Motion
 =========================== */
 
-.link-section {
-  margin-top: 28px;
+@media (prefers-reduced-motion: reduce) {
+  .aurora { animation: none; }
+  .links a { transition: none; }
 }
 
-.section-label {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.35);
-  margin-bottom: 12px;
-  margin-top: 0;
-  padding-left: 4px;
+/* ===========================
+   Large screens
+=========================== */
+
+@media (min-width: 768px) {
+  body {
+    padding: 40px 24px;
+    overflow: hidden;
+  }
 }
