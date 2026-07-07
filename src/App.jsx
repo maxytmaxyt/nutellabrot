@@ -4,12 +4,22 @@ import { useCardTilt } from './hooks/useCardTilt'
 import { useFloatingAvatar } from './hooks/useFloatingAvatar'
 import { LinkItem } from './components/LinkItem'
 
-const LINKS = [
-  { emoji: '📸', label: 'Instagram', href: '#' },
-  { emoji: '🎵', label: 'TikTok', href: '#' },
-  { emoji: '▶', label: 'YouTube', href: '#' },
-  { emoji: '💬', label: 'Discord', href: '#' },
-  { emoji: '💻', label: 'GitHub', href: '#' },
+const SECTIONS = [
+  {
+    label: 'Eigene Projekte',
+    links: [
+      { emoji: '🎮', label: 'LAGRP [ER:LC]', href: 'https://discord.gg/lagrp' },
+      { emoji: '🎨', label: 'Deutschland Design', href: 'https://discord.gg/Y7GvVRQR6M' },
+      { emoji: '🇩🇪', label: 'German Roleplay', href: 'https://discord.gg/SvcYCCrCKj' },
+    ],
+  },
+  {
+    label: 'Support Server',
+    links: [
+      { emoji: '⚡', label: 'PowerBot', href: 'https://discord.gg/powerbot' },
+      { emoji: '🤖', label: 'Roleplay Bots', href: 'https://discord.gg/YYxhbqRjUp' },
+    ],
+  },
 ]
 
 export default function App() {
@@ -17,13 +27,14 @@ export default function App() {
   const { cardRef, onMouseMove, onMouseLeave } = useCardTilt()
   const avatarRef = useFloatingAvatar()
 
-  // Page reveal on load
   useEffect(() => {
     document.body.animate([{ opacity: 0 }, { opacity: 1 }], {
       duration: 800,
       fill: 'forwards',
     })
   }, [])
+
+  let globalIndex = 0
 
   return (
     <>
@@ -40,10 +51,11 @@ export default function App() {
           <img
             ref={avatarRef}
             className="avatar"
-            src="assets/avatar.jpg"
+            src={`https://cdn.discordapp.com/users/1323492807239008328/avatars/1323492807239008328.png`}
+            onError={e => { e.target.src = `https://cdn.discordapp.com/embed/avatars/0.png` }}
             alt="Profilbild"
           />
-          <h1>Dein Name</h1>
+          <h1>NutellaBrot</h1>
           <p className="subtitle">Creator · Developer · Designer</p>
         </header>
 
@@ -52,17 +64,25 @@ export default function App() {
           Willkommen auf meiner kleinen Ecke des Internets.
         </section>
 
-        <nav className="links">
-          {LINKS.map((link, i) => (
-            <LinkItem
-              key={link.label}
-              href={link.href}
-              emoji={link.emoji}
-              label={link.label}
-              animationDelay={i * 100}
-            />
-          ))}
-        </nav>
+        {SECTIONS.map((section) => (
+          <div key={section.label} className="link-section">
+            <p className="section-label">{section.label}</p>
+            <nav className="links">
+              {section.links.map((link) => {
+                const delay = globalIndex++ * 100
+                return (
+                  <LinkItem
+                    key={link.label}
+                    href={link.href}
+                    emoji={link.emoji}
+                    label={link.label}
+                    animationDelay={delay}
+                  />
+                )
+              })}
+            </nav>
+          </div>
+        ))}
 
         <footer>
           <small>Built with ♥ • 2026</small>
