@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useCursor } from './hooks/useCursor'
 import { useCardTilt } from './hooks/useCardTilt'
 import { useFloatingAvatar } from './hooks/useFloatingAvatar'
+import { useDiscordPresence } from './hooks/useDiscordPresence'
 import { LinkItem } from './components/LinkItem'
 
 const SECTIONS = [
@@ -22,10 +23,33 @@ const SECTIONS = [
   },
 ]
 
+const STATUS_LABELS = {
+  online: 'Online',
+  idle: 'Abwesend',
+  dnd: 'Bitte nicht stören',
+  offline: 'Offline',
+}
+
+function formatLastOnline(iso) {
+  if (!iso) return null
+  const date = new Date(iso)
+  const now = new Date()
+  const diffMs = now - date
+  const diffMin = Math.floor(diffMs / 60_000)
+  const diffH = Math.floor(diffMs / 3_600_000)
+  const diffD = Math.floor(diffMs / 86_400_000)
+
+  if (diffMin < 1) return 'Gerade eben'
+  if (diffMin < 60) return `vor ${diffMin} Min.`
+  if (diffH < 24) return `vor ${diffH} Std.`
+  return `vor ${diffD} Tag${diffD !== 1 ? 'en' : ''}`
+}
+
 export default function App() {
   const cursorRef = useCursor()
   const { cardRef, onMouseMove, onMouseLeave } = useCardTilt()
   const avatarRef = useFloatingAvatar()
+  const { status, lastOnline, avatarUrl } = useDiscordPresence()
 
   useEffect(() => {
     document.body.animate([{ opacity: 0 }, { opacity: 1 }], {
@@ -35,6 +59,9 @@ export default function App() {
   }, [])
 
   let globalIndex = 0
+
+  const fallbackAvatar = 'https://cdn.discordapp.com/embed/avatars/0.png'
+  const resolvedAvatar = avatarUrl || fallbackAvatar
 
   return (
     <>
@@ -48,15 +75,32 @@ export default function App() {
         onMouseLeave={onMouseLeave}
       >
         <header style={{ textAlign: 'center' }}>
-          <img
-            ref={avatarRef}
-            className="avatar"
-            src={`https://cdn.discordapp.com/users/1323492807239008328/avatars/1323492807239008328.png`}
-            onError={e => { e.target.src = `https://cdn.discordapp.com/embed/avatars/0.png` }}
-            alt="Profilbild"
-          />
+          <div className="avatar-wrapper">
+            <img
+              ref={avatarRef}
+              className="avatar"
+              src={resolvedAvatar}
+              onError={e => { e.target.src = fallbackAvatar }}
+              alt="Profilbild"
+            />
+            {status && (
+              <span className={`status-dot status-dot--${status}`} aria-label={STATUS_LABELS[status]} />
+            )}
+          </div>
           <h1>NutellaBrot</h1>
           <p className="subtitle">Creator · Developer · Designer</p>
+          {status && (
+            <p className="presence-info">
+              <span className={`presence-badge presence-badge--${status}`}>
+                {STATUS_LABELS[status] ?? status}
+              </span>
+              {status === 'offline' && lastOnline && (
+                <span className="presence-last-online">
+                  · zuletzt online {formatLastOnline(lastOnline)}
+                </span>
+              )}
+            </p>
+          )}
         </header>
 
         <section className="bio">
