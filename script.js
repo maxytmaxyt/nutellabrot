@@ -1,0 +1,1 @@
+const c=document.querySelector(".cursor");onmousemove=e=>{c.style.left=e.clientX+"px";c.style.top=e.clientY+"px"};document.querySelectorAll("a").forEach((a,i)=>{a.animate([{opacity:0,transform:"translateY(20px)"},{opacity:1,transform:"translateY(0)"}],{duration:500,delay:i*100,fill:"forwards"})});
