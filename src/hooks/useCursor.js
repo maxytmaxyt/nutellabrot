@@ -21,7 +21,7 @@ export function useCursor() {
     const animate = () => {
       currentX += (mouseX - currentX) * 0.12
       currentY += (mouseY - currentY) * 0.12
-      cursor.style.transform = `translate(${currentX}px, ${currentY}px) translate(-50%, -50%)`
+      cursor.style.transform = `translate(${currentX - 110}px, ${currentY - 110}px)`
       rafId = requestAnimationFrame(animate)
     }
 

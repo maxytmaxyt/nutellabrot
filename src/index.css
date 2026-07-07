@@ -87,9 +87,10 @@ body::after {
     transparent 70%
   );
   filter: blur(35px);
-  transform: translate(-50%, -50%);
   z-index: -1;
   will-change: transform;
+  top: 0;
+  left: 0;
 }
 
 @media (hover: none) {
@@ -335,7 +336,7 @@ footer {
 @media (min-width: 768px) {
   body {
     padding: 40px 24px;
-    overflow: hidden;
+    overflow-y: auto;
   }
 }
 
