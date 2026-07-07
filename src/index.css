@@ -284,3 +284,22 @@ footer {
 .animate-fadeIn {
   animation: fadeIn 0.8s ease forwards;
 }
+
+/* ===========================
+   Link Sections
+=========================== */
+
+.link-section {
+  margin-top: 28px;
+}
+
+.section-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+  margin-bottom: 12px;
+  margin-top: 0;
+  padding-left: 4px;
+}
