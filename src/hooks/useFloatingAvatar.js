@@ -6,16 +6,21 @@ export function useFloatingAvatar() {
   useEffect(() => {
     let t = 0
     let rafId
+    let last = null
 
-    const float = () => {
-      t += 0.02
+    const float = (timestamp) => {
+      if (last !== null) {
+        const delta = Math.min((timestamp - last) / 1000, 0.05)
+        t += delta * 0.8
+      }
+      last = timestamp
       if (avatarRef.current) {
-        avatarRef.current.style.transform = `translateY(${Math.sin(t) * 6}px)`
+        avatarRef.current.style.transform = `translateY(${Math.sin(t) * 5}px)`
       }
       rafId = requestAnimationFrame(float)
     }
 
-    float()
+    rafId = requestAnimationFrame(float)
     return () => cancelAnimationFrame(rafId)
   }, [])
 
